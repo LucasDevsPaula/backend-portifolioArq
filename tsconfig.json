@@ -19,7 +19,9 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
+    "moduleResolution": "node16",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
