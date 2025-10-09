@@ -11,7 +11,7 @@ import { CreateProjectController } from "./controller/projects/CreateProjectCont
 
 const router = Router();
 
-const upload = multer(uploadconfig.upload("../tmp"));
+const upload = multer(uploadconfig.upload("./tmp"));
 
 router.get(
   "/auth/google",

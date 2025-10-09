@@ -4,6 +4,7 @@ import { CreateProjectService } from "../../services/projects/CreateProjectServi
 class CreateProjectController {
   async handle(req: Request, res: Response) {
     const { titulo, descricao, data, categoria } = req.body;
+    const usuarioId = req.user_id;
 
     if (!req.files) {
       throw new Error("error upload file");
@@ -13,9 +14,9 @@ class CreateProjectController {
       };
 
       const capa = files["capa"]?.[0];
-      const imagens = files["imagens"] || [];
+      const imagens = files["imagens"];
 
-      const imagemCapa = capa?.filename || "";
+      const imagemCapa = capa?.filename;
       const imagensData = imagens.map((img) => ({
         url: img.filename,
       }));
@@ -34,6 +35,7 @@ class CreateProjectController {
         data,
         categoria,
         imagemCapa,
+        usuarioId,
         imagens: imagensData,
       });
 
