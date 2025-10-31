@@ -13,7 +13,7 @@ class UpdateProjectController {
 
     const capa = files?.capa?.[0]?.filename ?? null;
 
-    const imagensAdd = files?.imagensAdd?.map((file) => ({
+    const imagens = files?.imagens?.map((file) => ({
       url: file.filename,
     }));
 
@@ -35,7 +35,7 @@ class UpdateProjectController {
         data,
         categoria,
         capa,
-        imagensAdd,
+        imagens,
         imagensRemoveIds,
       },
       { project_id },

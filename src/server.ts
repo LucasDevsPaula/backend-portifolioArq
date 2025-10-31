@@ -1,7 +1,9 @@
+// src/server.ts
+
 import express, { Request, Response, NextFunction } from "express";
 import { router } from "./routes.js";
 import cors from "cors";
-import passport from "./config/passaport.js";
+import passport from "./config/passaport.js"
 import path from "path";
 import { dirname, extname, resolve } from "path";
 import { fileURLToPath } from "url";
@@ -17,16 +19,15 @@ app.use(passport.initialize());
 app.use(router);
 app.use("/files", express.static(path.resolve(__dirname, "..", "tmp")));
 
+// Inicializa o passport globalmente
+app.use(passport.initialize());
+
+// Middleware de erro
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof Error) {
-    return res.status(400).json({
-      error: err.message,
-    });
+    return res.status(400).json({ error: err.message });
   }
-  return res.status(500).json({
-    status: "error",
-    message: "Internal error server.",
-  });
+  return res.status(500).json({ status: "error", message: "Internal server error." });
 });
 
 app.listen(3333, () => {

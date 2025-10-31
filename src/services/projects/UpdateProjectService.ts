@@ -10,7 +10,7 @@ interface ProjectRequest {
   data?: string | Date | null;
   categoria?: string;
   capa?: string;
-  imagensAdd?: ImageRequest[];
+  imagens?: ImageRequest[];
   imagensRemoveIds?: string[];
 }
 
@@ -20,11 +20,11 @@ interface ProjectId {
 
 class UpdateProjectService {
   async execute(
-    {titulo, descricao, data, categoria, capa, imagensAdd, imagensRemoveIds }: ProjectRequest,
+    {titulo, descricao, data, categoria, capa, imagens, imagensRemoveIds }: ProjectRequest,
     { project_id }: ProjectId,
     user_id: string
   ) {
-    console.log(`Titulo: ${titulo}, Descrição: ${descricao}, Data: ${data}, Categoria: ${categoria}\n Capa: ${capa}, ImagensAdd: {${imagensAdd}}, ImagensRemoveIds: {${imagensRemoveIds}}`);
+    console.log(`Titulo: ${titulo}, Descrição: ${descricao}, Data: ${data}, Categoria: ${categoria}\n Capa: ${capa}, Imagens: {${imagens}}, ImagensRemoveIds: {${imagensRemoveIds}}`);
     const project = await prisma.projeto.findUnique({
       where: {
         id: project_id,
@@ -76,8 +76,8 @@ class UpdateProjectService {
               id: { in: imagensRemoveIds },
             },
           }),
-          ...(imagensAdd?.length && {
-            create: imagensAdd.map((img) => ({
+          ...(imagens?.length && {
+            create: imagens.map((img) => ({
               url: img.url,
             })),
           }),
