@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { DeleteProjectService } from '../../services/project/DeleteProjectService.js';
+import { Request, Response } from "express";
+import { DeleteProjectService } from "../../services/projects/DeleteProjectService.js";
 
 export class DeleteProjectController {
   async handle(req: Request, res: Response) {
@@ -15,7 +15,6 @@ export class DeleteProjectController {
       });
 
       return res.status(204).send();
-
     } catch (error) {
       if (error.message === "Projeto não encontrado.") {
         return res.status(404).json({ error: error.message });
@@ -23,9 +22,9 @@ export class DeleteProjectController {
       if (error.message === "Não autorizado.") {
         return res.status(403).json({ error: error.message });
       }
-      
-      console.error(error); 
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
+
+      console.error(error);
+      return res.status(500).json({ error: "Erro interno no servidor." });
     }
   }
 }

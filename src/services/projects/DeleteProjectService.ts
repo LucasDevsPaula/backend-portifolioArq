@@ -1,7 +1,10 @@
 import { prisma } from "../../prisma.js"; 
 import fs from 'fs';
 import path from 'path';
-import multerConfig from '../../config/multerconfig.js';
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface IDeleteRequest {
   projetoId: string;
@@ -23,13 +26,16 @@ export class DeleteProjectService {
       throw new Error("Não autorizado.");
     }
 
+     const uploadFolder = path.resolve(__dirname, "..", "..", "tmp");
+
+
     const filesToDelete = [
       projeto.imagemCapa,
       ...projeto.ImagemProjeto.map(img => img.url)
     ].filter(Boolean); 
 
     const deletePromises = filesToDelete.map(filename => {
-      const filePath = path.join(multerConfig.directory, filename);
+      const filePath = path.join(uploadFolder, filename);
       return fs.promises.unlink(filePath).catch(err => 
         console.warn(`Arquivo não encontrado para deletar: ${filePath}`)
       );

@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { ListCategoriesService } from '../../services/project/ListCategoriesService.js';
+import { Request, Response } from "express";
+import { ListCategoriesService } from "../../services/projects/ListCategoriesService.js";
 
 export class ListCategoriesController {
   async handle(req: Request, res: Response) {
@@ -9,7 +9,7 @@ export class ListCategoriesController {
       return res.json(categorias);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao buscar categorias' });
+      return res.status(500).json({ message: "Erro ao buscar categorias" });
     }
   }
 }

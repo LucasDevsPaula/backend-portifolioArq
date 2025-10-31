@@ -7,8 +7,7 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "nodenext",
     "target": "es2020",
     "typeRoots": [
       "./src/@types",
@@ -48,8 +47,5 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  },
-  "exclude": [
-    "src/config/passaport.ts"
-  ]
+  }
 }
