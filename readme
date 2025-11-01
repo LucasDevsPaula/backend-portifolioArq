@@ -1,0 +1,185 @@
+Documentação da API - Portfólio de Arquitetura
+
+URL Base: http://localhost:3333
+1. Autenticação
+
+Esta rota é usada para obter o token de autenticação necessário para acessar as rotas protegidas (criação e exclusão de projetos).
+Login de Administrador
+
+    Método: POST
+
+    Endpoint: /session
+
+    Descrição: Realiza o login de um usuário administrador para obter um token JWT.
+
+    Autenticação: Não requerida.
+
+    Corpo da Requisição (Request Body): application/json
+    code JSON
+
+    
+{
+  "email": "seu-email@admin.com",
+  "password": "sua-senha-segura"
+}
+
+  
+
+Resposta de Sucesso (200 OK):
+code JSON
+
+        
+    {
+      "id": "cl...",
+      "nome": "Nome do Admin",
+      "email": "seu-email@admin.com",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+
+      
+
+2. Categorias
+
+Recurso para gerenciar as categorias dos projetos.
+Listar Todas as Categorias
+
+    Método: GET
+
+    Endpoint: /category
+
+    Descrição: Retorna uma lista com todas as categorias de projetos que já foram cadastradas. Ideal para o frontend criar filtros dinâmicos.
+
+    Autenticação: Não requerida (Rota pública).
+
+    Exemplo de URL: http://localhost:3333/category
+
+    Resposta de Sucesso (200 OK):
+    code JSON
+
+        
+    [
+      "residencial",
+      "comercial",
+      "interiores"
+    ]
+
+      
+
+3. Projetos
+
+Recurso principal da API, responsável por gerenciar os projetos do portfólio.
+Criar um Novo Projeto
+
+    Método: POST
+
+    Endpoint: /projetos
+
+    Descrição: Cria um novo projeto no portfólio. Requer o upload de uma imagem de capa e uma ou mais imagens de galeria.
+
+    Autenticação: Requerida (Bearer Token).
+
+        No cabeçalho (Header) da requisição, adicione: Authorization: Bearer SEU_TOKEN_AQUI
+
+    Corpo da Requisição (Request Body): multipart/form-data
+
+        titulo (text): O título do projeto.
+
+        descricao (text): A descrição detalhada do projeto.
+
+        categoria (text): A categoria (ex: "residencial", "comercial").
+
+        imagemCapa (file): Um único arquivo de imagem para a capa.
+
+        imagens (file): Um ou mais arquivos de imagem para a galeria.
+
+    Resposta de Sucesso (201 Created): Retorna o objeto do projeto criado (sem as imagens da galeria).
+
+Listar Todos os Projetos (com Paginação)
+
+    Método: GET
+
+    Endpoint: /projetos
+
+    Descrição: Busca uma lista paginada de todos os projetos. Pode ser filtrada por categoria.
+
+    Autenticação: Não requerida (Rota pública).
+
+    Parâmetros de Query (Query Params):
+
+        page (opcional): O número da página desejada. Padrão: 1.
+
+        limit (opcional): O número de itens por página. Padrão: 10.
+
+        categoria (opcional): Filtra os projetos pela categoria informada.
+
+    Resposta de Sucesso (200 OK): Retorna um objeto com os dados da página e informações de paginação.
+    code JSON
+
+        
+    {
+      "data": [ /* ...lista de projetos... */ ],
+      "total": 20,
+      "page": 1,
+      "limit": 10,
+      "totalPages": 2
+    }
+
+      
+
+Buscar Detalhes de um Projeto Específico
+
+    Método: GET
+
+    Endpoint: /projetos/:id
+
+    Descrição: Retorna os dados completos de um único projeto, incluindo todas as suas imagens de galeria.
+
+    Autenticação: Não requerida (Rota pública).
+
+    Exemplo de URL: http://localhost:3333/projetos/clxyz123...
+
+    Resposta de Sucesso (200 OK): Retorna o objeto completo do projeto.
+
+Pesquisar Projetos por Termo
+
+    Método: GET
+
+    Endpoint: /project/search
+
+    Descrição: Realiza uma busca textual no título e na descrição dos projetos. Retorna uma lista simplificada dos resultados.
+
+    Autenticação: Não requerida (Rota pública).
+
+    Parâmetros de Query (Query Params):
+
+        q: O termo de busca desejado.
+
+    Exemplo de URL: http://localhost:3333/project/search?q=moderna
+
+    Resposta de Sucesso (200 OK): Retorna um array com os projetos encontrados.
+    code JSON
+
+        
+    [
+      {
+        "id": "clxyz123...",
+        "titulo": "Casa Moderna no Lago",
+        "imagemCapa": "url-da-imagem-de-capa.jpg"
+      }
+    ]
+
+      
+
+Deletar um Projeto
+
+    Método: DELETE
+
+    Endpoint: /projetos/:id
+
+    Descrição: Exclui um projeto e todas as suas imagens associadas, tanto do banco de dados quanto do servidor de arquivos.
+
+    Autenticação: Requerida (Bearer Token).
+
+    Exemplo de URL: http://localhost:3333/projetos/clxyz123...
+
+    Resposta de Sucesso (204 No Content): A requisição retorna o status 204 sem nenhum corpo de resposta.
