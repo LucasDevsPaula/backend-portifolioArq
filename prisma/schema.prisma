@@ -36,6 +36,9 @@ model Projeto {
   categoria  String?
   imagemCapa String
   usuarioId  String
+  cliente     String?   
+  responsavel String?   
+  prazo       DateTime?
   usuario    Usuario   @relation(fields: [usuarioId], references: [id])
   ImagemProjeto ImagemProjeto[]
 

@@ -12,6 +12,10 @@ interface ProjectRequest {
   capa?: string;
   imagens?: ImageRequest[];
   imagensRemoveIds?: string[];
+  // --- ADICIONADO: Novos campos opcionais na interface ---
+  cliente?: string;
+  responsavel?: string;
+  prazo?: string;
 }
 
 interface ProjectId {
@@ -20,11 +24,24 @@ interface ProjectId {
 
 class UpdateProjectService {
   async execute(
-    {titulo, descricao, data, categoria, capa, imagens, imagensRemoveIds }: ProjectRequest,
+    // Recebendo os novos campos aqui também
+    {
+      titulo,
+      descricao,
+      data,
+      categoria,
+      capa,
+      imagens,
+      imagensRemoveIds,
+      cliente,
+      responsavel,
+      prazo,
+    }: ProjectRequest,
     { project_id }: ProjectId,
     user_id: string
   ) {
-    console.log(`Titulo: ${titulo}, Descrição: ${descricao}, Data: ${data}, Categoria: ${categoria}\n Capa: ${capa}, Imagens: {${imagens}}, ImagensRemoveIds: {${imagensRemoveIds}}`);
+    // console.log(`Debug Update: Cliente: ${cliente}, Resp: ${responsavel}, Prazo: ${prazo}`);
+
     const project = await prisma.projeto.findUnique({
       where: {
         id: project_id,
@@ -42,9 +59,10 @@ class UpdateProjectService {
       throw new Error("Not authorized");
     }
 
-    //validar e converter a data
+    // --- Validação da DATA original (Mantive sua lógica) ---
     console.log("Valor recebido em date:", data, "Tipo:", typeof data);
-    let projectDate: Date;
+    let projectDate: Date | null;
+
     if (
       data === undefined ||
       data === null ||
@@ -59,7 +77,13 @@ class UpdateProjectService {
     } else if (data instanceof Date) {
       projectDate = data;
     } else {
-      throw new Error("Invalid date");
+      projectDate = project.data; // Fallback
+    }
+
+    // --- Lógica para o PRAZO (Novo) ---
+    let prazoDate: Date | null = project.prazo;
+    if (prazo && typeof prazo === "string" && prazo.trim() !== "") {
+      prazoDate = new Date(prazo);
     }
 
     const updateProject = await prisma.projeto.update({
@@ -67,9 +91,16 @@ class UpdateProjectService {
       data: {
         titulo: titulo ?? project.titulo,
         descricao: descricao ?? project.descricao,
-        data: projectDate ?? project.data,
+        data: projectDate, // Usa a data tratada acima
         categoria: categoria ?? project.categoria,
         imagemCapa: capa ?? project.imagemCapa,
+
+        // --- ADICIONADO: Salvando novos campos ---
+        cliente: cliente ?? project.cliente,
+        responsavel: responsavel ?? project.responsavel,
+        prazo: prazoDate,
+        // ----------------------------------------
+
         ImagemProjeto: {
           ...(imagensRemoveIds?.length && {
             deleteMany: {

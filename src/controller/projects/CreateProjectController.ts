@@ -3,7 +3,9 @@ import { CreateProjectService } from "../../services/projects/CreateProjectServi
 
 class CreateProjectController {
   async handle(req: Request, res: Response) {
-    const { titulo, descricao, data, categoria } = req.body;
+    // 1. Extraímos os novos campos do corpo da requisição
+    const { titulo, descricao, data, categoria, cliente, responsavel, prazo } =
+      req.body;
     const usuarioId = req.user_id;
 
     if (!req.files) {
@@ -16,16 +18,18 @@ class CreateProjectController {
       const capa = files["capa"]?.[0];
       const imagens = files["imagens"];
 
-      const imagemCapa = capa?.filename;
-      const imagensData = imagens.map((img) => ({
-        url: img.filename,
-      }));
+      // Se não tiver imagem de capa, usamos null ou string vazia (depende da sua regra)
+      const imagemCapa = capa ? capa.filename : "";
+
+      // Tratamento para evitar erro se não houver imagens extras
+      const imagensData = imagens
+        ? imagens.map((img) => ({
+            url: img.filename,
+          }))
+        : [];
 
       console.log("Capa:", capa?.filename);
-      console.log(
-        "Imagens:",
-        imagens.map((img) => img.filename)
-      );
+      // console.log("Imagens:", imagens?.map((img) => img.filename));
 
       const creteProjectService = new CreateProjectService();
 
@@ -37,6 +41,10 @@ class CreateProjectController {
         imagemCapa,
         usuarioId,
         imagens: imagensData,
+        // 2. PASSAMOS OS NOVOS DADOS PARA O SERVICE
+        cliente,
+        responsavel,
+        prazo,
       });
 
       return res.json(project);
