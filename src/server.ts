@@ -1,4 +1,3 @@
-// src/server.ts
 
 import express, { Request, Response, NextFunction } from "express";
 import { router } from "./routes.js";
@@ -21,8 +20,6 @@ app.use(passport.initialize());
 app.use(router);
 app.use("/files", express.static(path.resolve(__dirname, "..", "tmp")));
 
-// Inicializa o passport globalmente
-app.use(passport.initialize());
 
 // Middleware de erro
 
