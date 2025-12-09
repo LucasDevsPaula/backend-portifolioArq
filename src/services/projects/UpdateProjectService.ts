@@ -7,14 +7,12 @@ interface ImageRequest {
 interface ProjectRequest {
   titulo?: string;
   descricao?: string;
-  data?: string | Date | null;
   categoria?: string;
   capa?: string;
   imagens?: ImageRequest[];
   imagensRemoveIds?: string[];
   // --- ADICIONADO: Novos campos opcionais na interface ---
   cliente?: string;
-  responsavel?: string;
   prazo?: string;
 }
 
@@ -28,13 +26,11 @@ class UpdateProjectService {
     {
       titulo,
       descricao,
-      data,
       categoria,
       capa,
       imagens,
       imagensRemoveIds,
       cliente,
-      responsavel,
       prazo,
     }: ProjectRequest,
     { project_id }: ProjectId,
@@ -59,26 +55,6 @@ class UpdateProjectService {
       throw new Error("Not authorized");
     }
 
-    // --- Validação da DATA original (Mantive sua lógica) ---
-    console.log("Valor recebido em date:", data, "Tipo:", typeof data);
-    let projectDate: Date | null;
-
-    if (
-      data === undefined ||
-      data === null ||
-      (typeof data === "string" && data.trim() === "")
-    ) {
-      projectDate = project.data;
-    } else if (typeof data === "string") {
-      projectDate = new Date(data);
-      if (isNaN(projectDate.getTime())) {
-        throw new Error("Invalid date format");
-      }
-    } else if (data instanceof Date) {
-      projectDate = data;
-    } else {
-      projectDate = project.data; // Fallback
-    }
 
     // --- Lógica para o PRAZO (Novo) ---
     let prazoDate: Date | null = project.prazo;
@@ -91,13 +67,11 @@ class UpdateProjectService {
       data: {
         titulo: titulo ?? project.titulo,
         descricao: descricao ?? project.descricao,
-        data: projectDate, // Usa a data tratada acima
         categoria: categoria ?? project.categoria,
         imagemCapa: capa ?? project.imagemCapa,
 
         // --- ADICIONADO: Salvando novos campos ---
         cliente: cliente ?? project.cliente,
-        responsavel: responsavel ?? project.responsavel,
         prazo: prazoDate,
         // ----------------------------------------
 
