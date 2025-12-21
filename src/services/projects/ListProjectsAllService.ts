@@ -5,6 +5,12 @@ class ListProjectsAllService {
     const projetos = await prisma.projeto.findMany({
       include: {
         ImagemProjeto: true,
+        usuario: {
+          select: {
+            id: true,
+            nome: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
