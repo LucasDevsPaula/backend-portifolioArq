@@ -34,35 +34,35 @@ router.get(
   }
 );
 
-router.post("/users", new CreateUserController().handle);//funciona
-router.post("/session", new AuthUserController().handle);//funciona
-router.get("/me", isAuthenticated, new DetailUserController().handle);//funciona
+router.post("/users", new CreateUserController().handle);
+router.post("/session", new AuthUserController().handle);
+router.get("/me", isAuthenticated, new DetailUserController().handle);
 
 router.post(
   "/project",
   isAuthenticated,
   upload.fields([{ name: "capa", maxCount: 1 }, { name: "imagens" }]),
   new CreateProjectController().handle
-);//funciona
+);
 
-router.get("/project", isAuthenticated, new ListProjectController().handle);//funciona
+router.get("/project", isAuthenticated, new ListProjectController().handle);
 router.get("/projects", new ListProjectsAllController().handle);
-router.get("/project/:id", new DetailProjectController().handle);//funciona
-router.get("/category", new ListCategoriesController().handle);//não sei como funciona
-router.get('/project/search', new SearchProjectsController().handle);//não sei como funciona
+router.get("/project/:id", new DetailProjectController().handle);
+router.get("/category", new ListCategoriesController().handle);
+router.get('/project/search', new SearchProjectsController().handle);
 
 router.put(
   "/project/:project_id",
   isAuthenticated,
   upload.fields([{ name: "capa", maxCount: 1 }, { name: "imagens" }]),
   new UpdateProjectController().handle
-);//funciona
+);
 
 router.delete(
   '/project/:id',
   isAuthenticated,
   new DeleteProjectController().handle
-);//funciona
+);
 
 
 export { router };
