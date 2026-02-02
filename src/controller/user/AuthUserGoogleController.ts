@@ -18,7 +18,7 @@ class AuthUserGoogleController {
     );
 
     console.log(`Logado com email: ${user.email}`);
-    return res.redirect(`http://localhost:5173/login?token=${token}`);
+    return res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}`);
   }
 }
 
